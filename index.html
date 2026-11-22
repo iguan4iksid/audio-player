@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Диско Элизиум — плеер</title>
+<style>
+  html, body { margin: 0; min-height: 100%; background: #0a0a0c; }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; box-sizing: border-box; }
+  /* виджет рассчитан на 453×298 px */
+  #wrap { width: 100%; max-width: 453px; aspect-ratio: 453 / 298; }
+  #player { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+
+<div id="wrap"><div id="player"></div></div>
+
+<script>
+  // 1. Подключаем playlist.js. raw.githubusercontent.com отдаёт файлы как text/plain,
+  //    и браузер такой скрипт не запустит, поэтому берём его через CDN jsDelivr,
+  //    а если CDN недоступен, то из локального файла рядом с этой страницей.
+  var sources = [
+    "https://cdn.jsdelivr.net/gh/iguan4iksid/audio-player@main/playlist.js",
+    "playlist.js"
+  ];
+
+  function start() {
+    // 2. Запускаем виджет. Файл с музыкой лежит рядом с index.html (или укажите полный URL).
+    new Playerjs({
+      id: "player",
+      file: [
+        { title: "Диско Элизиум", file: "Albom_OB2026-07-24_22_16_32.mp3" }
+        // сюда можно добавить другие треки:
+        // , { title: "Название", file: "track2.mp3" }
+      ]
+    });
+  }
+
+  (function load(i) {
+    if (i >= sources.length) { console.error("Не удалось загрузить playlist.js"); return; }
+    var s = document.createElement("script");
+    s.src = sources[i];
+    s.onload = start;
+    s.onerror = function () { load(i + 1); };
+    document.head.appendChild(s);
+  })(0);
+</script>
+
+</body>
+</html>
